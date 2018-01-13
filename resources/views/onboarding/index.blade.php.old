@@ -1,0 +1,241 @@
+@extends('layouts.onboard_app')
+
+@section('page-title')
+- Introduction
+@endsection
+
+@section('content')
+<style type="text/css">
+	.container {
+		font-family: 'Roboto', sans-serif;
+	}
+	#onBoardHelp {
+		-webkit-animation:colorchange 20s infinite alternate;
+	}
+	@-webkit-keyframes colorchange {
+		0% {
+
+			color: blue;
+		}
+
+		10% {
+
+			color: #8e44ad;
+		}
+
+		20% {
+
+			color: #1abc9c;
+		}
+
+		30% {
+
+			color: #d35400;
+		}
+
+		40% {
+
+			color: blue;
+		}
+
+		50% {
+
+			color: #34495e;
+		}
+
+		60% {
+
+			color: blue;
+		}
+
+		70% {
+
+			color: #2980b9;
+		}
+		80% {
+
+			color: #f1c40f;
+		}
+
+		90% {
+
+			color: #2980b9;
+		}
+
+		100% {
+
+			color: pink;
+		}
+	}
+</style>
+<div class="container">
+	<div style="margin-top: 20px;">
+		
+	</div>
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1">
+			<div class="panel">
+				<div class="panel-heading">
+					<h3 class="panel-title" style="visibility: hidden;">Welcome to GClout</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-10 col-md-offset-2">
+							<h3 id="onBoardHelp">Some Basic Info About GClout</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="panel">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-8 col-md-offset-2">
+										<img class="img-circle info" src="{{ asset('img/icons/balance.png') }}" style="width: 120px;height: 120px;">
+										<p></p>
+									</div>
+									<div class="col-md-12">
+										<p>
+											Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="panel">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-8 col-md-offset-2">
+										<img class="img-circle info" src="{{ asset('img/icons/debate.png') }}" style="width: 120px;height: 120px;">
+										<p></p>
+									</div>
+									<div class="col-md-12">
+										<p class="text-center">
+											Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="panel">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-8 col-md-offset-2">
+										<img class="img-circle info" src="{{ asset('img/icons/handshake.png') }}" style="width: 120px;height: 120px;">
+										<p></p>
+									</div>
+									<div class="col-md-12">
+										<p>
+											Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="panel">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-8 col-md-offset-2">
+										<img class="img-circle info" src="{{ asset('img/icons/megaphone.png') }}" style="width: 120px;height: 120px;">
+										<p></p>
+									</div>
+									<div class="col-md-12">
+										<p>
+											Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="panel">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-8 col-md-offset-2">
+										<img class="img-circle info" src="{{ asset('img/icons/pie-chart.png') }}" style="width: 120px;height: 120px;">
+										<p></p>
+									</div>
+									<div class="col-md-12">
+										<p>
+											Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="panel">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-8 col-md-offset-2">
+										<img class="img-circle info" src="{{ asset('img/icons/speech.png') }}" style="width: 120px;height: 120px;">
+										<p></p>
+									</div>
+									<div class="col-md-12">
+										<p class="text-center">
+											Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4 col-md-offset-4">
+					<button type="button" class="btn btn-block ink-reaction btn-primary" id="continue1">Continue</button>
+					<noscript>
+						<a href="{{ url('intro') }}/profile-setup" class="btn btn-block ink-reaction btn-primary">Continue</a>
+					</noscript>
+				</div>
+			</div>
+			<div style="margin-bottom: 20px;">
+
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function() {
+		function processAjaxData(response, urlPath){
+			document.getElementById("content").innerHTML = response.html;
+			document.title = response.pageTitle;
+			window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
+		}
+		$("#continue1").click(function() {
+			window.location.href="{{ url('intro') }}/profile-setup";
+			/*$("body").fadeOut("slow", function() {
+				$.get("{{ url('intro') }}/profile-setup", function(data, xhr, status) {
+					$("body").html(data).fadeIn("slow");
+					window.history.pushState({"html":data, "pageTitle":"Profile Setup"}, "", "{{ url('intro/profile-setup') }}");
+					$(document).prop('title', 'GClout - Profile Setup');
+
+				});
+			});*/
+		});
+	});
+</script>
+@endsection
