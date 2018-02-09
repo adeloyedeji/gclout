@@ -2,9 +2,9 @@
     <div>
         <div class="widget">
             <div class="widget-header">
-                <h3 class="widget-caption">Activity Feed</h3>
+                <h3 class="widget-caption">Clout Activities</h3>
             </div>
-            <div class="widget-body bordered-top bordered-sky">
+            <div class="widget-body bordered-top bordered-sky force-scroll">
                 <div class="card">
                     <div class="content">
                         <ul class="list-unstyled team-members" id="people-suggestion">
@@ -49,6 +49,36 @@
                                   {{ feed.name }} {{ feed.message }}
                                 </div>
                               </div>
+                              <div class="row" v-else-if="feed.type == 'App\\Notifications\\CloutLoginNotification'">
+                                <div class="col-xs-3">
+                                  <div class="avatar">
+                                      <img :src="feed.avatar" alt="img" class="img-circle img-no-padding img-responsive">
+                                  </div>
+                                </div>
+                                <div class="col-xs-9">
+                                  <span v-if="feed.name == user.name">
+                                    You are now active
+                                  </span>
+                                  <span v-else>
+                                    {{ feed.name }} {{ feed.message }}
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="row" v-else-if="feed.type == 'App\\Notifications\\CloutLogoutNotification'">
+                                <div class="col-xs-3">
+                                  <div class="avatar">
+                                      <img :src="feed.avatar" alt="img" class="img-circle img-no-padding img-responsive">
+                                  </div>
+                                </div>
+                                <div class="col-xs-9">
+                                  <span v-if="feed.name == user.name">
+                                    You are now offline
+                                  </span>
+                                  <span v-else>
+                                    {{ feed.name }} {{ feed.message }}
+                                  </span>
+                                </div>
+                              </div>
                             </li>
                         </ul>
                     </div>
@@ -66,18 +96,24 @@ export default {
     data() {
         return {
           notifications: {},
+          user: [],
         }
     },
     mounted() {
         setInterval(this.feeds, 5000)
+        this.get_auth_user_data()
     },
     methods: {
+        get_auth_user_data() {
+            axios.get('/get_auth_user_data')
+                .then( (resp) => {
+                    this.user = resp.data
+                } )
+        },
     },
     computed: {
         feeds() {
-          console.log("Your activity feeds")
             this.notifications = this.$store.getters.all_notifications
-            console.log(this.notifications)
             return this.$store.getters.all_notifications
         }
     }
@@ -201,5 +237,9 @@ export default {
   height: 145px !important;
   -webkit-transform: translate(-72.5px, -72.5px) scale(0.725) translate(72.5px, 72.5px);
   transform: translate(-72.5px, -72.5px) scale(0.725) translate(72.5px, 72.5px);
+}
+.force-scroll {
+  overflow-y: auto;
+  height: 300px;
 }
 </style>

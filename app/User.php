@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     use Notifiable;
     use Friendable;
-    use Searchable;
+    // use Searchable;
     use Cloutable;
 
     /**
@@ -25,7 +25,7 @@ class User extends Authenticatable
     ];
 
     public $with = [
-        'profile', 
+        'profile', 'petitions'
     ];
 
     /**
@@ -67,5 +67,17 @@ class User extends Authenticatable
 
     public function lga() {
         return $this->hasOne(Lga::class);
+    }
+
+    public function press() {
+        return $this->hasMany(Press::class);
+    }
+
+    public function speech() {
+        return $this->hasMany(Speech::class);
+    }
+
+    public function petitions() {
+        return $this->hasMany(Petition::class, 'user_id', $this->id);
     }
 }

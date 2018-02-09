@@ -84,11 +84,15 @@ Route::group(['middleware' => 'auth'], function() {
     ]);
     Route::get('/add_friend/{id}', [
         'uses'  =>  'FriendshipController@add_friend',
-        'as'    =>  'add_friend',
+        'as'    =>  'friend.add',
     ]);
     Route::get('/accept_friend/{id}', [
         'uses'  =>  'FriendshipController@accept_friend',
-        'as'    =>  'accept_friend',
+        'as'    =>  'friend.accept',
+    ]);
+    Route::get('/cancel_request/{id}', [
+        'uses'  =>  'FriendshipController@cancel_request',
+        'as'    =>  'friend.cancel',
     ]);
     Route::get('/get_friend_suggestions', [
         'uses'  =>  'FriendshipController@get_friend_suggestions',
@@ -100,6 +104,14 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/notifications', [
         'uses'  =>  'HomeController@notifications',
         'as'    =>  'notifications',
+    ]);
+    Route::get('/general/get-categories', [
+        'uses'  =>  'GeneralController@post_categories',
+        'as'    =>  'post.categories'
+    ]);
+    Route::post('/general/store', [
+        'uses'  =>  'GeneralController@store',
+        'as'    =>  'general.store'
     ]);
     Route::post('/post/store', [
         'uses'  =>  'PostController@store',
@@ -171,7 +183,70 @@ Route::group(['middleware' => 'auth'], function() {
         'uses'  =>  'MessageController@show',
         'as'    =>  'messaging.show'
     ]);
+    
+    Route::get('movements/sign/{id}','MovementController@signature');
+
+    Route::get('/press/{username}', [
+        'uses'  =>  'PressController@index',
+        'as'    =>  'press.index'
+    ]);
+
+    Route::get('/press/feed/{id}', [
+        'uses'  =>  'PressController@press_feed',
+        'as'    =>  'press.feed'
+    ]);
+
+    Route::post('/press/store', [
+        'uses'  =>  'PressController@store',
+        'as'    =>  'press.store'
+    ]);
+
+    Route::get('/press/like/{id}', [
+        'uses'  =>  'PressController@like',
+        'as'    =>  'press.like'
+    ]);
+
+    Route::get('/press/unlike/{id}', [
+        'uses'  =>  'PressController@unlike',
+        'as'    =>  'press.unlike'
+    ]);
+
+    Route::get('/speeches/{username}', [
+        'uses'  =>  'SpeechController@index',
+        'as'    =>  'speech.index'
+    ]);
+
+    Route::get('/speeches/feed/{id}', [
+        'uses'  =>  'SpeechController@speech_feed',
+        'as'    =>  'speech.feed'
+    ]);
+
+    Route::post('/speeches/store', [
+        'uses'  =>  'SpeechController@store',
+        'as'    =>  'speech.store'
+    ]);
+
+    Route::get('/speeches/like/{id}', [
+        'uses'  =>  'SpeechController@like',
+        'as'    =>  'speech.like'
+    ]);
+
+    Route::get('/speeches/unlike/{id}', [
+        'uses'  =>  'SpeechController@unlike',
+        'as'    =>  'speech.unlike'
+    ]);
+    
+    //Route::get('polls/sign/{id}','PollController@signatures');
 
     Route::resource('post-comment', 'PostCommentController');
     Route::resource('intro', 'IntroController');
+    Route::resource('movements', 'MovementController');
+    Route::resource('polls','PollController');
+
+    Route::resource('district','DistrictController');
+    // Route::resource('press','PressReleaseController');
+    // Route::resource('speeches','SpeechesController');
+    Route::resource('interviews','InterviewController');
+    Route::resource('budget','BudgetController');
+    Route::resource('mda','MdaController');
 });

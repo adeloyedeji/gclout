@@ -36,6 +36,8 @@ Vue.component('appsidebar', require('./components/AppSidebar.vue'));
 
 Vue.component('friends-list', require('./components/FriendList.vue'));
 
+Vue.component('active-users', require('./components/ActiveUsers.vue'));
+
 Vue.component('profile-edit', require('./components/ProfileEdit.vue'));
 
 Vue.component('unread', require('./components/UnreadNotification.vue'));
@@ -54,7 +56,25 @@ Vue.component('activity-feed', require('./components/ActivityFeed.vue'));
 
 Vue.component('friend-status', require('./components/FriendStatus.vue'));
 
+Vue.component('chat-component', require('./components/ChatComponent.vue'));
+
 Vue.component('people-you-may-know', require('./components/YouMayKnow.vue'));
+
+Vue.component('press-component', require('./components/PressComponent.vue'));
+
+Vue.component('speech-component', require('./components/SpeechComponent.vue'));
+
+Vue.component('extras-component', require('./components/ExtrasComponent.vue'));
+
+Vue.component('press-feed-component', require('./components/PressFeedComponent.vue'));
+
+Vue.component('press-like-component', require('./components/PressLikeComponent.vue'));
+
+Vue.component('speech-feed-component', require('./components/SpeechFeedComponent.vue'));
+
+Vue.component('speech-like-component', require('./components/SpeechLikeComponent.vue'));
+
+Vue.component('general-post', require('./components/GeneralPost.vue'));
 
 import { store } from './store'
 

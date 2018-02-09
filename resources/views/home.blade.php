@@ -7,11 +7,17 @@
                 <appsidebar :url="'{{ env('APP_URL') }}'" 
                     :profile_username="'{{ Auth::user()->username }}'" 
                     :profile_name="'{{ Auth::user()->name }}'" 
-                    :profile_avatar="'{{ Auth::user()->avatar }}'">
+                    :profile_avatar="'{{ Auth::user()->avatar }}'"
+                    :role="{{ Auth::user()->profile->role }}">
                 </appsidebar>
             </div>
             <div class="col-md-6">
-                <post :id="'droppy'" :url="'{{ url('post/store') }}'" :toki="'{{ csrf_token() }}'" :user_id="{{Auth::user()->id}}"></post>
+                {{--  <post :id="'droppy'" :url="'{{ url('post/store') }}'" :toki="'{{ csrf_token() }}'" :user_id="{{Auth::user()->id}}"></post>  --}}
+                <general-post   :id="'droppy'" 
+                                :url="'{{ url('post/store') }}'" 
+                                :toki="'{{ csrf_token() }}'" 
+                                :user_id="{{Auth::user()->id}}">
+                </general-post>
             
                 <feed :id="{{Auth::user()->id}}"></feed>
                 
@@ -23,4 +29,5 @@
             </div>
         </div>
     </div>
+    <active-users :user_id="{{Auth::id()}}"></active-users>
 @endsection

@@ -32,8 +32,9 @@
     <link href="{{ asset('css/photos2.css') }}" rel="stylesheet">
     @elseif( active('notifications/me') || active('notifications/clout-requests') )
     <link href="{{ asset('css/list_posts.css') }}" rel="stylesheet">
-    @elseif( active('messages/me') )
+    @elseif( active('messages/me')  ||  active('messaging/*') )
     <link href="{{ asset('css/messages1.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/timeline.css') }}" rel="stylesheet">
     @elseif( active('intro/know-your-leaders') )
     <link href="{{ asset('css/profile2.css') }}" rel="stylesheet">
     @elseif( active('profile/about/*') )
@@ -116,6 +117,11 @@
                             <ul class="dropdown-menu" style="width: 320px;background-color:whitesmoke">
                                 
                             </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-controller" title="Active Users">
+                                <i class="fa fa-users"></i>
+                            </a>
                         </li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" title="Sign out">
@@ -626,6 +632,363 @@
             });
         });
     </script>
+    @elseif( active('movements') ) 
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(function() {
+            $("#excelfile").click(function(){
+                $("#dropzonediv").slideToggle(200);
+            });
+            Dropzone.autoDiscover = false;
+    
+            var myDropzone = new Dropzone("#dropzonediv", {
+                url:"{{ url('movements') }}",
+                autoProcessQueue:false,
+                acceptedFiles:'image/png,image/jpeg,image/jpg',
+                uploadMultiple:false,
+                maxFiles:1,
+                dictDefaultMessage:"Click or drag a picture here.",
+                addRemoveLinks:'dictCancelUpload',
+                parallelUploads:1,
+                dictInvalidFileType:"Picture Must Be An Image",
+                maxFilesize:2,
+                dictFileTooBig: 'Warning: Image is Larger than 2Mb'
+            });
+    
+            myDropzone.on("sending", function(file,xhr,formData) {
+                formData.append("movement_body", $("#movement_body").val() ? $("#movement_body").val() : '');
+                formData.append("movement_title",$("#movement_title").val());
+                formData.append("category",$("#category_new").val());
+                formData.append("timeframe",$("#timeframe").val());
+                formData.append("target_arm",$("#target_arm").val());
+                formData.append("targetnumber",$("#targetnumber").val());
+                formData.append("_token", $("#_token").val());
+            });
+            myDropzone.on("success", function(file,response) {
+                var data = response;
+                console.log(data);
+                if(response)
+                {
+                    new Noty({
+                        type: 'success',
+                        layout: 'bottomLeft',
+                        text: 'Update successful'
+                    }).show();
+                    //console.log(postBlock);
+                    $("#postvalue").prepend(response);
+                    //console.log(response);
+                    window.location.reload()
+                }
+                else
+                {
+                    if(data.post)
+                    {
+                        new Noty({
+                            type: 'error',
+                            layout: 'bottomLeft',
+                            text: 'Post not valid'
+                        }).show();
+                        return false;
+                    }
+                    if(data.photo)
+                    {
+                        new Noty({
+                            type: 'error',
+                            layout: 'bottomLeft',
+                            text: 'Invalid photo path.'
+                        }).show();
+                        return false;
+                    }
+                }
+            });
+    
+            myDropzone.on("error", function(file, response) {
+                console.log(response);
+                new Noty({
+                    type: 'error',
+                    layout: 'bottomLeft',
+                    text: 'Update not complete. Please reload page and try again.'
+                }).show();
+                console.log(response);
+                myDropzone.removeFile(file);
+            });
+    
+            myDropzone.on("complete", function(file) {
+                myDropzone.removeFile(file);
+            });
+    
+            $("#postData").click(function(){
+                if(myDropzone.files.length)
+                {  
+                    myDropzone.processQueue();
+                }
+                else
+                {
+                    var movement_title = $("#movement_title").val();
+                    var movement_body = $("#movement_body").val();
+                    var category = $("#category_new").val();
+                    var timeframe = $("#timeframe").val();
+                    var targetnumber = $("#targetnumber").val();
+                    var target_arm = $("#target_arm").val();
+                    var hidden = $('#_token').val();
+                    
+                    var formData = {
+                        'movement_title':movement_title,
+                        'movement_body':movement_body,
+                        'category':category,
+                        'timeframe':timeframe,
+                        'targetnumber':targetnumber,
+                        'target_arm':target_arm,
+                        '_token':hidden
+                    }
+                    console.log(formData);
+                    $.ajax({
+                        url:"{{url('movements')}}",
+                        type:"POST",
+                        dataType:"JSON",
+                        data:formData,
+                        success:function(data){
+                            new Noty({
+                                type: 'success',
+                                layout: 'bottomLeft',
+                                text: 'Movement created successfully.'
+                            }).show();
+                            window.location.reload()
+                        },
+                        fail:function(data){
+                            console.log(data);
+                            new Noty({
+                                type: 'error',
+                                layout: 'bottomLeft',
+                                text: data
+                            }).show();
+                        }
+                    });
+                }
+            });
+        });
+    
+        function otherfunc(id,opcode){
+            $.get("{{url('movements')}}/id",{id:id,op:opcode},function(data){
+                if(data == 1)
+                {
+                    new Noty({
+                        type: 'success',
+                        layout: 'bottomLeft',
+                        text: "You've Liked this Post."
+                    }).show();
+                    console.log(data);
+                }
+                else
+                {
+                    console.log(data);
+                    new Noty({
+                        type: 'error',
+                        layout: 'bottomLeft',
+                        text: "You have already like this post."
+                    }).show();
+                }
+            });
+        }
+    </script>
+    
+    <script type="text/javascript">
+        $(function(){
+            $('#target_arm').on('change',function(){
+                var val = $(this).val();
+                if(val == "President"){
+                $("#need_number").text("You need 5000 People to Sign this Petition");
+                }
+                else if(val == "Governor")$("#need_number").text("You need 3000 People to Sign this Petition");
+                else if(val == "House of Reps"){$("#need_number").text("You need 1000 People to Sign this Petition");}
+                else if(val == "Senate"){$("#need_number").text("You need 1500 People to Sign this Petition");}
+                else if(val == "State Reps"){$("#need_number").text("You need 750 People to Sign this Petition");}
+                else{$("#need_number").text("You need 500 People to Sign this Petition");}
+            });
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="{{asset('css/dropzone.css')}}">
+    <script src="{{asset('js/dropzone.js')}}" type="text/javascript"></script>
+    @elseif( active('polls') || active('polls/*') )
+    <script type="text/javascript">
+        $(function(){
+            $('#target_arm').on('change',function(){
+              var val = $(this).val();
+              if(val == "President"){
+                $("#need_number").text("You need 5000 People to Sign this Petition");
+              }
+              else if(val == "Governor")$("#need_number").text("You need 3000 People to Sign this Petition");
+              else if(val == "House of Reps"){$("#need_number").text("You need 1000 People to Sign this Petition");}
+              else if(val == "Senate"){$("#need_number").text("You need 1500 People to Sign this Petition");}
+              else if(val == "State Reps"){$("#need_number").text("You need 750 People to Sign this Petition");}
+              else{$("#need_number").text("You need 500 People to Sign this Petition");}
+            });
+          });
+        
+        function answer_click(answer,id,poll_id){
+          var hidden = $("#hideme").val();     
+          $.post("{{url('polls/')}}",{opcode:2,_token:hidden,answer:answer,id:id,poll_id:poll_id},function(data){
+            console.log(data);
+          })
+          .error(function(data){
+            console.log(data);
+          });
+        }
+      </script>
+    @elseif( active('press') || active('press/*'))
+    {{--  <link rel="stylesheet" type="text/css" href="{{asset('css/dropzone.css')}}">  --}}
+    <script type="text/javascript">
+
+        $(function() {
+            $("#excelfile").click(function(){
+                $("#dropzonediv").slideToggle(200);
+            });
+            Dropzone.autoDiscover = false;
+
+            var myDropzone = new Dropzone("#dropzonediv", {
+                url:"{{ url('press') }}",
+                autoProcessQueue:false,
+                acceptedFiles:'image/png,image/jpeg,image/jpg',
+                uploadMultiple:false,
+                maxFiles:1,
+                dictDefaultMessage:"Click or drag a picture here.",
+                addRemoveLinks:'dictCancelUpload',
+                parallelUploads:1,
+                dictInvalidFileType:"Picture Must Be An Image",
+                maxFilesize:2,
+                dictFileTooBig: 'Warning: Image is Larger than 2Mb'
+            });
+
+            myDropzone.on("sending", function(file,xhr,formData) {
+                formData.append("status", $("#real_post").val() ? $("#real_post").val() : '');
+                formData.append("_token", $("#_token").val());
+            });
+
+            myDropzone.on("success", function(file,response) {
+                var data = response;
+                if(response)
+                {
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": false,
+                        "debug": false,
+                        "positionClass": "toast-bottom-right",
+                        "showDuration": "330",
+                        "hideDuration": "330",
+                        "timeOut":  "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "swing",
+                        "showMethod": "slideDown",
+                        "hideMethod": "slideUp",
+                        "preventDuplicates": true,
+                        "onclick": null
+                    }
+                    toastr["success"]("Update successful.", "Success.")
+                    //console.log(postBlock);
+                    $("#postvalue").prepend(response);
+                    //console.log(response);
+                }
+                else
+                {
+                    if(data.post)
+                    {
+                        new Noty({
+                            type: 'error',
+                            layout: 'bottomLeft',
+                            text: "Invalid post."
+                        }).show();
+                        return false;
+                    }
+
+                    if(data.photo)
+                    {
+                        new Noty({
+                            type: 'error',
+                            layout: 'bottomLeft',
+                            text: "Invalid photo path."
+                        }).show();
+                        return false;
+                    }
+                }
+            });
+
+            myDropzone.on("error", function(file, response) {
+                console.log(response);
+                new Noty({
+                    type: 'error',
+                    layout: 'bottomLeft',
+                    text: "Please reload page and try again."
+                }).show();
+                myDropzone.removeFile(file);
+            });
+
+            myDropzone.on("complete", function(file) {
+                myDropzone.removeFile(file);
+            });
+
+            $("#postData").click(function(){
+                if(myDropzone.files.length)
+                {
+                    myDropzone.processQueue();
+                }
+                else
+                {
+
+                    var status 	= 	$("#real_post").val() ? $("#real_post").val() : '';
+
+                    var formData = {
+                        'status':status,
+                        'opcode':1,
+                        "_token":$("#_token").val()
+                    };
+                    console.log(formData);
+                    $.ajax({
+                        url: "{{ url('press') }}",
+                        type: "POST",
+                        dataType: "JSON",
+                        data:formData,
+                        success: function(data) {
+                            alert("Post Successful");
+                        },
+                        fail: function(data) {
+                            console.log(data);
+                            new Noty({
+                                type: 'error',
+                                layout: 'bottomLeft',
+                                text: "Please reload page and try again."
+                            }).show();
+                            return false;
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
+    <script type="text/javascript">
+        function otherfunc(id,opcode){
+            $.get("{{url('budget')}}/id",{id:id,op:opcode},function(data){
+                if(data == 1){
+                    new Noty({
+                        type: 'success',
+                        layout: 'bottomLeft',
+                        text: "Post liked!"
+                    }).show();
+                    console.log(data);
+                }
+                else{
+                    console.log(data);
+                    new Noty({
+                        type: 'error',
+                        layout: 'bottomLeft',
+                        text: "You have previously liked this post!"
+                    }).show();
+                }
+            });
+        }
+    </script>
+    {{--  <script src="{{asset('js/dropzone.js')}}" type="text/javascript"></script>  --}}
     @endif
 </body>
 </html>

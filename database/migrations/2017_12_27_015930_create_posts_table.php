@@ -20,6 +20,7 @@ class CreatePostsTable extends Migration
             $table->text('location')->nullable();
             $table->text('video')->nullable();
             $table->timestamps();
+            // $table->softDeletes();
         });
     }
 

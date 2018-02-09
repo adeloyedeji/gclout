@@ -15,7 +15,7 @@ class Onboarding
      */
     public function handle($request, Closure $next)
     {
-        if($request->user()->profile->total_login <= 0)
+        if($request->user()->profile->total_login <= 1)
         {
             return redirect("intro/profile-setup");
         }

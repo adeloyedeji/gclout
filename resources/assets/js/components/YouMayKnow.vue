@@ -3,7 +3,7 @@
         <div class="widget">
             <div class="widget-header">
                 <h3 class="widget-caption">People You May Know</h3>
-                <a style="margin-top:1em;margin-left:1em" title="Refresh list" @click="get_people_you_may_know"><i class="fa fa-refresh"></i></a>
+                <!-- <a style="margin-top:1.5em;margin-right:1.5em;padding-top:20px" title="Refresh list" @click="get_people_you_may_know"><i class="fa fa-refresh"></i></a> -->
             </div>
             <div class="widget-body bordered-top bordered-sky">
                 <div class="card">

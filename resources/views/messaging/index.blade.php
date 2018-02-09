@@ -7,7 +7,8 @@
                 <appsidebar :url="'{{ env('APP_URL') }}'" 
                     :profile_username="'{{ Auth::user()->username }}'" 
                     :profile_name="'{{ Auth::user()->name }}'" 
-                    :profile_avatar="'{{ Auth::user()->avatar }}'">
+                    :profile_avatar="'{{ Auth::user()->avatar }}'"
+                    :role="{{ Auth::user()->profile->role }}">
                 </appsidebar>
             </div>
             <div class="col-md-9">

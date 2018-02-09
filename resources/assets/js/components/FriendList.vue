@@ -43,8 +43,8 @@
                 </a>
                 <div class="contact-box-footer">
                     <div class="m-t-xs btn-group">
-                        <a href="javascript:void(0)" class="btn btn-xs btn-white">
-                            <i class="fa fa-check"></i>Request sent
+                        <a href="javascript:void(0)" class="btn btn-xs btn-white" @click.prevent="cancel_request(friend.id)">
+                            <i class="fa fa-check"></i>Cancel request
                         </a>
                     </div>
                 </div>
@@ -103,6 +103,21 @@ export default {
                         this.get_pending_clouts_sent()
                     }
                 })
+        }, 
+        cancel_request(id) {
+            axios.get('/cancel_request/' + id)
+                 .then( (resp) => {
+                     if(resp.data == 1) {
+                         new Noty({
+                            type: 'success',
+                            layout: 'bottomLeft',
+                            text: 'Request declined.'
+                        }).show();
+                        this.get_clouts()
+                        this.get_pending_clouts()
+                        this.get_pending_clouts_sent()
+                     }
+                 })
         }
     }
 }

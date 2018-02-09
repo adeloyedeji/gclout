@@ -7,10 +7,10 @@
                 <button class="btn btn-default" v-if="clout.id === id">Send Chat</button>
             </span>
             <span v-for="clout in pending_clouts">
-                <button class="btn btn-success" v-if="clout.id === id" @click="accept_friend(id)">Accept request</button>
+                <button class="btn btn-success" v-if="clout.id === id" @click="accept_friend(clout.id)">Accept request</button>
             </span>
             <span v-for="clout in pending_clouts_sent">
-                <button class="btn btn-success" v-if="clout.id === id">Request sent</button>
+                <button class="btn btn-success" v-if="clout.id === id" @click.prevent="cancel_request(clout.id)">Cancel request</button>
             </span>
         </div>
     </div>
@@ -74,6 +74,21 @@ export default {
                         this.get_pending_clouts_sent()
                     }
                 })
+        },
+        cancel_request(id) {
+            axios.get('/cancel_request/' + id)
+                 .then( (resp) => {
+                     if(resp.data == 1) {
+                         new Noty({
+                            type: 'success',
+                            layout: 'bottomLeft',
+                            text: 'Request declined.'
+                        }).show();
+                        this.get_clouts()
+                        this.get_pending_clouts()
+                        this.get_pending_clouts_sent()
+                     }
+                 })
         }
     }
 }

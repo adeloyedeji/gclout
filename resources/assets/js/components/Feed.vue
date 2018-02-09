@@ -3,7 +3,9 @@
         <div class="box box-widget" v-for="post in posts" :id="post.id">
             <div class="box-header with-border" :id="'post' + post.id">
                 <div class="user-block">
-                    <img :src="post.user.avatar" alt="" width="50px" height="50px" class="avatar-feed">
+                    <center>
+                        <img :src="post.user.avatar" alt="" width="50px" height="50px" class="avatar-feed">
+                    </center>
                     <span class="username">
                         <a :href="'/profile/' + post.user.username">{{ post.user.name }}</a> 
                         <span style="font-size:12px;color:#aaa">@</span>
@@ -16,16 +18,48 @@
             </div>
             <div class="box-body" style="display:block;word-wrap:break-word;">
                 <span v-if="post.photos">
-                    <span>
-                        <span v-if="post.content">{{ post.content }}</span>
-                        <p></p>
-                        <span v-for="photo in post.photos">
-                            <img class="img-responsive show-in-modal" :src="photo.photo" alt="Photo">
+                    <span v-if="post.video">
+                        <span>
+                            <span v-if="post.content">{{ post.content }}</span>
+                            <p></p>
+                            <span v-for="photo in post.photos">
+                                <center>
+                                    <img class="img-responsive show-in-modal" :src="photo.photo" alt="Photo">
+                                </center>
+                            </span>
+                            <center>
+                                <iframe width="450" height="315" :src="post.video" frameborder="0" allowfullscreen></iframe>
+                            </center>
+                        </span>
+                    </span>
+                    <span v-else>
+                        <span>
+                            <span v-if="post.content">{{ post.content }}</span>
+                            <p></p>
+                            <span v-for="photo in post.photos">
+                                <center>
+                                    <img class="img-responsive show-in-modal" :src="photo.photo" alt="Photo">
+                                </center>
+                            </span>
                         </span>
                     </span>
                 </span>
                 <div v-else>
-                    <span id="">{{ post.content }}</span>
+                    <span v-if="post.video">
+                        <span>
+                            <span v-if="post.content">{{ post.content }}</span>
+                            <p></p>
+                            <span v-for="photo in post.photos">
+                                <center>
+                                    <img class="img-responsive show-in-modal" :src="photo.photo" alt="Photo">
+                                </center>
+                            </span>
+                            <center>
+                                <iframe width="450" height="315" :src="post.video" frameborder="0" allowfullscreen></iframe>
+                            </center>
+                        </span>
+                    </span>
+                    <span v-else>{{ post.content }}</span>
                 </div>
                 <p></p>
                 
@@ -88,7 +122,9 @@
                         resp.data.forEach( (post) => {
                             this.$store.commit("add_post", post)
                         })
-                    } )
+                    } ).catch(error => {
+                        window.location.reload()
+                    })
             }, 
             get_auth_user_data() {
                 axios.get('/get_auth_user_data')
@@ -100,7 +136,7 @@
             }, 
             moment_format(date) {
                 // return Moment().startOf(date).fromNow();
-                return Moment(data, 'YYYY-MM-DD HH:mm:ss').startOf('hour').fromNow()
+                return Moment(date, 'YYYY-MM-DD HH:mm:ss').startOf('hour').fromNow()
                 //return Moment(date).fromNow()
             }
         }, 

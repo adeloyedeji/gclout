@@ -60,6 +60,12 @@ class FriendshipController extends Controller
         return $resp;
     }
 
+    public function cancel_request($id) {
+        $resp = \Auth::user()->cancel_request($id);
+
+        return $resp;
+    }
+
     public function get_friend_suggestions() {  
         $list = [];
         $suggestions = [];

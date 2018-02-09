@@ -8,12 +8,12 @@
             </span>
         </p>
 
-        <a class="noln" href="javascript:void(0)" v-if="!auth_user_likes_post" title="Like" @click="like()"><i class="glyphicon glyphicon-heart-empty"></i>&emsp;&emsp;</a>
+        <a class="noln" href="javascript:void(0)" v-if="!auth_user_likes_post" title="Like" @click="like()"><i class="glyphicon glyphicon-heart-empty"></i>&emsp;</a>
         <a class="noln" href="javascript:void(0)" v-else title="Unlike" @click="unlike()"><i class="glyphicon glyphicon-heart"></i>&emsp;&emsp;</a>
 
         <a class="noln" href="javascript:void(0);">
             <i class="fa fa-share" style="font-size:15px;"></i>
-        </a>&emsp;&emsp;
+        </a>&emsp;
         <a class="noln" href="javascript:void(0);">
             <i class="fa fa-trash text-danger" style="font-size:15px;"></i>
         </a>

@@ -38,107 +38,21 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <select class="form-control">
+                            <option value="">Share my thoughts</option>
+                            <option value="">Create a Petition</option>
+                            <option value="">Create a Poll</option>
+                            <option value="">Post a speech</option>
+                            <option value="">Press Release</option>
+                            <option value="">Interview</option>
+                        </select>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </template>
-<!--
-<style lang="sass" rel="stylesheet/scss">
-    @import url('../node_modules/dropzone/dist/dropzone.css');
-
-    .dropzone {
-        border: 2px dashed #42A5F5;
-        color: #42A5F5;
-        font-weight: 400;
-        font-size: 16px;
-        font-family: 'Arial', sans-serif;
-        letter-spacing: 0.2px;
-        transition: background-color .2s linear;
-
-        &:hover{
-            background-color: rgba(66,165,245,0.03);
-        }
-
-        .dz-preview {
-            &:hover .dz-image img{
-                transform: none;
-                -webkit-filter: none;
-            }
-
-            .dz-image {
-                border-radius: 0;
-            }
-
-            .dz-remove{
-                position: absolute;
-                z-index: 30;
-                color: white;
-                margin-left: 15px;
-                padding: 10px;
-                top: inherit;
-                bottom: 15px;
-                border: 2px white solid;
-                text-decoration: none;
-                text-transform: uppercase;
-                font-size: 0.8rem;
-                font-weight: 800;
-                letter-spacing: 1.1px;
-                opacity: 0;
-            }
-
-            .dz-details {
-                bottom: 0;
-                top: 0;
-                color: white;
-                background-color: rgba(33, 150, 243, 0.8);
-                transition: opacity .2s linear;
-                text-align: left;
-
-                .dz-filename span, .dropzone .dz-preview .dz-details .dz-size span {
-                    background-color: transparent;
-                }
-
-                .dz-filename:not(:hover) span{
-                    border: none;
-                }
-
-                .dz-filename:hover span{
-                    background-color: transparent;
-                    border: none;
-                }
-            }
-
-            &:hover .dz-remove {
-                opacity: 1;
-            }
-
-            .dz-success-mark,
-            .dz-error-mark {
-                margin-left: -40px;
-                margin-top: -50px;
-            }
-
-            .dz-success-mark i,
-            .dz-error-mark i {
-                color: white;
-                font-size: 5rem;
-            }
-        }
-
-        .dz-message {
-            span {
-                color: #42A5F5;
-            }
-
-            i {
-                font-size: 86px;
-                color: #42A5F5;
-            }
-        }
-    }
-</style>
--->
 <script>
 import Dropzone from 'dropzone'
 
@@ -277,10 +191,18 @@ export default {
         const vm = this
         this.dropzone.on('addedfile', function (file) {
             //vm.$emit('droply-file-added', file)
+            if(vm.dropzone.files.length) {
+                vm.not_working = false
+            }
         })
 
         this.dropzone.on('removedfile', function (file) {
             //vm.$emit('droply-removed-file', file)
+            if(vm.dropzone.files.length) {
+                vm.not_working = false
+            } else {
+                vm.not_working = true
+            }
         })
 
         this.dropzone.on('success', function (file, response) {
@@ -293,7 +215,7 @@ export default {
                 }).show();
             } else {
                 vm.content = ''
-                this.get_feed()
+                //this.get_feed()
                 window.location.reload()
 
                 //this.dropzone.removeAllFiles(true)

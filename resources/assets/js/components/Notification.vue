@@ -19,9 +19,22 @@ export default {
     mounted() {
         this.listen()
         this.get_clouts()
-        this.listen_to_friends() 
+        this.listen_to_friends()
+        this.get_auth_user()
     }, 
     methods: {
+        get_auth_user() {
+            axios.get('/get_auth_user_data')
+                 .then( (resp) => {
+                     this.$store.commit("auth_user_data", resp.data)
+                 }).catch(error => {
+                    new Noty({
+                        type: 'success',
+                        layout: 'bottomLeft',
+                        text: error.message
+                    }).show();
+                 })
+        },
         listen() {
             Echo.private('App.User.' + this.id)
                 .notification( (data) => {
@@ -35,15 +48,11 @@ export default {
                 })
         }, 
         listen_to_friends() {
-            console.log("Trying to listen to other friends...")
             var user_clouts;
             axios.get("/get_clouts/" + this.id)
                  .then( (resp) => {
                      user_clouts = resp.data
-                     console.log("User clouts:")
-                    console.log(user_clouts)
                     if(user_clouts.length > 0) {
-                        console.log("Listening to friends")
                         user_clouts.forEach( (u) => {
                             Echo.private('App.User.' + u.id)
                                 .notification( (data) => {
@@ -61,6 +70,13 @@ export default {
                                                 text: data.name + data.message + data.friend_name
                                             }).show();
                                         }
+                                    } else if(data.type == 'App\\Notifications\\CloutLoginNotitification') {
+                                        new Noty({
+                                            type: 'success',
+                                            layout: 'bottomLeft',
+                                            text: data.name + data.message
+                                        }).show();
+                                        this.$store.commit("add_active_user", data)
                                     } else {
                                         new Noty({
                                             type: 'success',

@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'blocked', 'onboard']);
+        $this->middleware(['onboard', 'auth', 'blocked']);
     }
 
     /**

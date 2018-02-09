@@ -51,6 +51,20 @@ trait Friendable {
         return 0;
     }
 
+    public function cancel_request($user_requested_id) {
+        if($this->id === $user_requested_id) {
+            return 0;
+        }
+
+        if($this->has_pending_friend_request_sent_to($user_requested_id)) {
+            $friendship = \App\Friendship::where([
+                'requester'         =>  $this->id,
+                'user_requested'    => $user_requested_id
+            ])->delete();
+            return 1;
+        }
+    }
+
     public function friends() {
         $friends1 = array();
         $friends2 = array();
