@@ -10,16 +10,8 @@
                     :profile_avatar="'{{ Auth::user()->avatar }}'">
                 </appsidebar>
             </div>
-            <div class="col-md-6">
-                <post :id="'droppy'" :url="'{{ url('post/store') }}'" :toki="'{{ csrf_token() }}'" :user_id="{{Auth::user()->id}}"></post>
-            
-                <feed :id="{{Auth::user()->id}}"></feed>
-                
-            </div>
-            <div class="col-md-3">
-                <activity-feed :id="{{Auth::id()}}"></activity-feed>
-
-                <people-you-may-know></people-you-may-know>
+            <div class="col-md-9">
+                Messaging section will be here...
             </div>
         </div>
     </div>

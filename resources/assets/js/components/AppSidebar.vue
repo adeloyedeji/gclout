@@ -26,7 +26,7 @@
                     <!-- End Attach only if role is 1-->
 
 
-                        <li>
+                        <li :class="isActive('home')">
                             <a href="/home">
                                 <i class="fa fa-user"></i> News feed
                             </a>
@@ -43,8 +43,8 @@
                                 <span class="label label-info pull-right r-activity">{{ photos }}</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="/messages/me"> 
+                        <li :class="isActive('messaging')">
+                            <a href="/messaging"> 
                             <i class="fa fa-envelope"></i> Messages 
                             <span class="label label-info pull-right r-activity">9</span>
                             </a>
@@ -120,11 +120,13 @@
         mounted() {
             this.clouts_total()
             this.clout_photo_total()
+            this.isActive(window.location.href)
         }, 
         data() {
             return {
                 clouts: 0,
                 photos: 0,
+                active: '',
             }
         }, 
         methods: {
@@ -142,6 +144,16 @@
                      .then( (resp) => {
                          this.photos = resp.data
                      })
+            },
+            clout_message_total() {
+                
+            },
+            isActive(param) {
+                console.log("Called to Check url")
+                var url = window.location.href
+                var part = url.split("/")
+                console.log("Logging part...")
+                console.log(part)
             }
         }, 
         computed: {

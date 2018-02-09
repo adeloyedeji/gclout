@@ -99,7 +99,8 @@
                      } )
             }, 
             moment_format(date) {
-                return Moment().startOf(date).fromNow();
+                // return Moment().startOf(date).fromNow();
+                return Moment(data, 'YYYY-MM-DD HH:mm:ss').startOf('hour').fromNow()
                 //return Moment(date).fromNow()
             }
         }, 

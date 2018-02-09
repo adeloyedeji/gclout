@@ -144,7 +144,7 @@
 					<ul class="cover-nav">
 						<li><a href="{{ url('profile', ['profile' => $user->username]) }}"><i class="fa fa-fw fa-bars"></i> Timeline</a></li>
 						<li><a href="{{ url('profiles/clout-profile-edit') }}#aboutClout"><i class="fa fa-fw fa-user"></i> About</a></li>
-						<li class="active"><a href="{{ url('friends') }}/list?profile={{$user->username}}"><i class="fa fa-fw fa-users"></i> Clouts</a></li>
+						<li class="active"><a href="{{ url('clouts/list', ['profile' => $user->username]) }}"><i class="fa fa-fw fa-users"></i> Clouts</a></li>
 						<li><a href="{{ url('photos', ['profile' => $user->username]) }}"><i class="fa fa-fw fa-image"></i> Photos</a></li>
 						<li>
 							@if($user->id == Auth::user()->id)

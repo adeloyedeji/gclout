@@ -157,7 +157,7 @@ export default {
                  } ) 
         }, 
         set_years() {
-            for(var i = 1990; i <= 2000; i++) {
+            for(var i = 1900; i <= 2000; i++) {
                 this.year_of_birth.push(i)
             }
         }, 

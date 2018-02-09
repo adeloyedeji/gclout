@@ -7,20 +7,18 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class FriendRequestAccepted extends Notification implements ShouldQueue
+class SharePostActivity extends Notification
 {
     use Queueable;
-    public $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct()
     {
         //
-        $this->user = $user;
     }
 
     /**
@@ -31,7 +29,7 @@ class FriendRequestAccepted extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'database', 'broadcast'];
+        return ['mail'];
     }
 
     /**
@@ -43,9 +41,9 @@ class FriendRequestAccepted extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line($this->user->name .  ' accepted your friend request.')
-                    ->action('View profile', route('profile', ['username' => $this->user->username]))
-                    ->line('Thank you for using GClout.');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -57,11 +55,7 @@ class FriendRequestAccepted extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'name'      =>  $this->user->name,
-            'message'   =>  ' accepted your friend request.',
-            'username'  =>  $this->user->username,
-            'id'        =>  $this->user->id,
-            'avatar'    =>  $this->user->avatar,
+            //
         ];
     }
 }

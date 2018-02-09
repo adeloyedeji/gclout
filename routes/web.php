@@ -167,6 +167,11 @@ Route::group(['middleware' => 'auth'], function() {
         'as'    =>  'photos.get'
     ]);
 
+    Route::get('/messaging/{username}', [
+        'uses'  =>  'MessageController@show',
+        'as'    =>  'messaging.show'
+    ]);
+
     Route::resource('post-comment', 'PostCommentController');
     Route::resource('intro', 'IntroController');
 });

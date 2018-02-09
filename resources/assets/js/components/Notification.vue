@@ -47,11 +47,27 @@ export default {
                         user_clouts.forEach( (u) => {
                             Echo.private('App.User.' + u.id)
                                 .notification( (data) => {
-                                    new Noty({
-                                        type: 'success',
-                                        layout: 'bottomLeft',
-                                        text: data.name + data.message
-                                    }).show();
+                                    if(data.type == 'App\\Notifications\\ShareFriendActivity') {
+                                        if(data.id === this.id) {
+                                            new Noty({
+                                                type: 'success',
+                                                layout: 'bottomLeft',
+                                                text: "You are now friends with " + data.friend_name
+                                            }).show();
+                                        } else {
+                                            new Noty({
+                                                type: 'success',
+                                                layout: 'bottomLeft',
+                                                text: data.name + data.message + data.friend_name
+                                            }).show();
+                                        }
+                                    } else {
+                                        new Noty({
+                                            type: 'success',
+                                            layout: 'bottomLeft',
+                                            text: data.name + data.message
+                                        }).show();
+                                    }
                                     this.$store.commit("add_notification", data)
                                 })
                         })

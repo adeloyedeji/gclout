@@ -3,6 +3,7 @@
         <div class="widget">
             <div class="widget-header">
                 <h3 class="widget-caption">People You May Know</h3>
+                <a style="margin-top:1em;margin-left:1em" title="Refresh list" @click="get_people_you_may_know"><i class="fa fa-refresh"></i></a>
             </div>
             <div class="widget-body bordered-top bordered-sky">
                 <div class="card">
@@ -30,6 +31,7 @@
                                     </div>					
                                 </div>
                             </li>
+                            <!--
                             <li v-if="clouts_suggestions.length <= 0">
                                 <div class='row'>
                                     <div class='col-xs-12'>
@@ -42,6 +44,7 @@
                                     </div>					
                                 </div>
                             </li>
+                            -->
                         </ul>
                     </div>
                 </div>
@@ -213,5 +216,8 @@ export default {
   height: 145px !important;
   -webkit-transform: translate(-72.5px, -72.5px) scale(0.725) translate(72.5px, 72.5px);
   transform: translate(-72.5px, -72.5px) scale(0.725) translate(72.5px, 72.5px);
+}
+.ref-list {
+    margin-top: .5em;
 }
 </style>

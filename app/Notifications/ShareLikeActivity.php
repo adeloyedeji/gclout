@@ -7,20 +7,23 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class FriendRequestAccepted extends Notification implements ShouldQueue
+class ShareLikeActivity extends Notification
 {
     use Queueable;
-    public $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public $liker;
+    public $owner;
+    public $post;
+    public function __construct($liker, $owner, $post)
     {
-        //
-        $this->user = $user;
+        $this->liker = $liker;
+        $this->owner = $owner;
+        $this->post = $post;
     }
 
     /**
@@ -31,7 +34,7 @@ class FriendRequestAccepted extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'database', 'broadcast'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -43,9 +46,9 @@ class FriendRequestAccepted extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line($this->user->name .  ' accepted your friend request.')
-                    ->action('View profile', route('profile', ['username' => $this->user->username]))
-                    ->line('Thank you for using GClout.');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -57,11 +60,11 @@ class FriendRequestAccepted extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'name'      =>  $this->user->name,
-            'message'   =>  ' accepted your friend request.',
-            'username'  =>  $this->user->username,
-            'id'        =>  $this->user->id,
-            'avatar'    =>  $this->user->avatar,
+            'l_name'    =>  $this->liker->name,
+            'message'   =>  ' liked ' . $this->owner->name . '\'s post.',
+            'l_avatar'  =>  $this->liker->avatar,
+            'o_avatar'  =>  $this->owner->avatar
+            'post_id'   =>  $this->post->id
         ];
     }
 }

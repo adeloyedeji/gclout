@@ -71473,7 +71473,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         moment_format: function moment_format(date) {
-            return Moment().startOf(date).fromNow();
+            // return Moment().startOf(date).fromNow();
+            return Moment(data, 'YYYY-MM-DD HH:mm:ss').startOf('hour').fromNow();
             //return Moment(date).fromNow()
         }
     },
@@ -79175,11 +79176,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         this.clouts_total();
         this.clout_photo_total();
+        this.isActive(window.location.href);
     },
     data: function data() {
         return {
             clouts: 0,
-            photos: 0
+            photos: 0,
+            active: ''
         };
     },
 
@@ -79200,6 +79203,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/clout/photo-total').then(function (resp) {
                 _this2.photos = resp.data;
             });
+        },
+        clout_message_total: function clout_message_total() {},
+        isActive: function isActive(param) {
+            console.log("Called to Check url");
+            var url = window.location.href;
+            var part = url.split("/");
+            console.log("Logging part...");
+            console.log(part);
         }
     },
     computed: {}
@@ -79276,7 +79287,7 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("ul", { staticClass: "nav nav-pills nav-stacked" }, [
-            _vm._m(0),
+            _c("li", { class: _vm.isActive("home") }, [_vm._m(0)]),
             _vm._v(" "),
             _c("li", [
               _c(
@@ -79306,7 +79317,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(1),
+            _c("li", { class: _vm.isActive("messaging") }, [_vm._m(1)]),
             _vm._v(" "),
             _vm._m(2),
             _vm._v(" "),
@@ -79322,24 +79333,20 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("a", { attrs: { href: "/home" } }, [
-        _c("i", { staticClass: "fa fa-user" }),
-        _vm._v(" News feed\n                        ")
-      ])
+    return _c("a", { attrs: { href: "/home" } }, [
+      _c("i", { staticClass: "fa fa-user" }),
+      _vm._v(" News feed\n                        ")
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("a", { attrs: { href: "/messages/me" } }, [
-        _c("i", { staticClass: "fa fa-envelope" }),
-        _vm._v(" Messages \n                        "),
-        _c("span", { staticClass: "label label-info pull-right r-activity" }, [
-          _vm._v("9")
-        ])
+    return _c("a", { attrs: { href: "/messaging" } }, [
+      _c("i", { staticClass: "fa fa-envelope" }),
+      _vm._v(" Messages \n                        "),
+      _c("span", { staticClass: "label label-info pull-right r-activity" }, [
+        _vm._v("9")
       ])
     ])
   },
@@ -80109,11 +80116,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     console.log("Listening to friends");
                     user_clouts.forEach(function (u) {
                         Echo.private('App.User.' + u.id).notification(function (data) {
-                            new Noty({
-                                type: 'success',
-                                layout: 'bottomLeft',
-                                text: data.name + data.message
-                            }).show();
+                            if (data.type == 'App\\Notifications\\ShareFriendActivity') {
+                                if (data.id === _this2.id) {
+                                    new Noty({
+                                        type: 'success',
+                                        layout: 'bottomLeft',
+                                        text: "You are now friends with " + data.friend_name
+                                    }).show();
+                                } else {
+                                    new Noty({
+                                        type: 'success',
+                                        layout: 'bottomLeft',
+                                        text: data.name + data.message + data.friend_name
+                                    }).show();
+                                }
+                            } else {
+                                new Noty({
+                                    type: 'success',
+                                    layout: 'bottomLeft',
+                                    text: data.name + data.message
+                                }).show();
+                            }
                             _this2.$store.commit("add_notification", data);
                         });
                     });
@@ -80423,7 +80446,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         set_years: function set_years() {
-            for (var i = 1990; i <= 2000; i++) {
+            for (var i = 1900; i <= 2000; i++) {
                 this.year_of_birth.push(i);
             }
         },
@@ -81941,8 +81964,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['id'],
     data: function data() {
         return {
             notifications: {}
@@ -81986,19 +82028,99 @@ var render = function() {
               },
               [
                 _vm.feeds.length <= 0
-                  ? _c("div", { staticClass: "lds-css ng-scope" }, [_vm._m(1)])
+                  ? _c("li", [
+                      _vm._v(
+                        "\n                          All clear. Your activity feed is empty!\n                        "
+                      )
+                    ])
                   : _vm._e(),
                 _vm._v(" "),
-                _c("li", [
-                  _vm._v(
-                    "\n                          " +
-                      _vm._s(_vm.feeds) +
-                      "\n                        "
-                  )
-                ]),
-                _vm._v(" "),
                 _vm._l(_vm.feeds, function(feed) {
-                  return _c("li", [_vm._m(2, true)])
+                  return _c("li", [
+                    feed.type == "App\\Notifications\\ShareFriendActivity"
+                      ? _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-xs-3" }, [
+                            _c("div", { staticClass: "avatar" }, [
+                              _c("img", {
+                                staticClass:
+                                  "img-circle img-no-padding img-responsive",
+                                attrs: { src: feed.avatar, alt: "img" }
+                              })
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-xs-9" }, [
+                            feed.id === _vm.id
+                              ? _c("span", [
+                                  _vm._v(
+                                    "\n                                " +
+                                      _vm._s(feed.name) +
+                                      " " +
+                                      _vm._s(feed.message) +
+                                      " " +
+                                      _vm._s(feed.friend_name) +
+                                      "\n                              "
+                                  )
+                                ])
+                              : _c("span", [
+                                  _vm._v(
+                                    "\n                                " +
+                                      _vm._s(feed.name) +
+                                      " " +
+                                      _vm._s(feed.message) +
+                                      " " +
+                                      _vm._s(feed.friend_name) +
+                                      "\n                              "
+                                  )
+                                ])
+                          ])
+                        ])
+                      : feed.type == "App\\Notifications\\FriendRequestAccepted"
+                        ? _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "col-xs-3" }, [
+                              _c("div", { staticClass: "avatar" }, [
+                                _c("img", {
+                                  staticClass:
+                                    "img-circle img-no-padding img-responsive",
+                                  attrs: { src: feed.avatar, alt: "img" }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-xs-9" }, [
+                              _vm._v(
+                                "\n                              " +
+                                  _vm._s(feed.name) +
+                                  " " +
+                                  _vm._s(feed.message) +
+                                  "\n                            "
+                              )
+                            ])
+                          ])
+                        : feed.type == "App\\Notifications\\NewFriendRequest"
+                          ? _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col-xs-3" }, [
+                                _c("div", { staticClass: "avatar" }, [
+                                  _c("img", {
+                                    staticClass:
+                                      "img-circle img-no-padding img-responsive",
+                                    attrs: { src: feed.avatar, alt: "img" }
+                                  })
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-xs-9" }, [
+                                _vm._v(
+                                  "\n                              " +
+                                    _vm._s(feed.name) +
+                                    " " +
+                                    _vm._s(feed.message) +
+                                    "\n                            "
+                                )
+                              ])
+                            ])
+                          : _vm._e()
+                  ])
                 })
               ],
               2
@@ -82016,47 +82138,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "widget-header" }, [
       _c("h3", { staticClass: "widget-caption" }, [_vm._v("Activity Feed")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "lds-facebook",
-        staticStyle: { width: "200px", height: "200px" }
-      },
-      [_c("div"), _vm._v(" "), _c("div"), _vm._v(" "), _c("div")]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-xs-3" }, [
-        _c("div", { staticClass: "avatar" }, [
-          _c("img", {
-            staticClass: "img-circle img-no-padding img-responsive",
-            attrs: {
-              src: "http://social/public/defaults/avatars/male.jpg",
-              alt: "img"
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-xs-9" }, [
-        _c("b", [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("Hillary Markston")])
-        ]),
-        _vm._v(" shared a \n                              "),
-        _c("b", [_c("a", { attrs: { href: "#" } }, [_vm._v("publication")])]),
-        _vm._v(". \n                              "),
-        _c("span", { staticClass: "timeago" }, [_vm._v("5 min ago")])
-      ])
     ])
   }
 ]
@@ -82367,7 +82448,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n@keyframes lds-facebook_1 {\n0% {\r\n    top: 36px;\r\n    height: 128px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@-webkit-keyframes lds-facebook_1 {\n0% {\r\n    top: 36px;\r\n    height: 128px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@keyframes lds-facebook_2 {\n0% {\r\n    top: 41.99999999999999px;\r\n    height: 116.00000000000001px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@-webkit-keyframes lds-facebook_2 {\n0% {\r\n    top: 41.99999999999999px;\r\n    height: 116.00000000000001px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@keyframes lds-facebook_3 {\n0% {\r\n    top: 48px;\r\n    height: 104px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@-webkit-keyframes lds-facebook_3 {\n0% {\r\n    top: 48px;\r\n    height: 104px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n.lds-facebook {\r\n  position: relative;\n}\n.lds-facebook div {\r\n  position: absolute;\r\n  width: 30px;\n}\n.lds-facebook div:nth-child(1) {\r\n  left: 35px;\r\n  background: #47639e;\r\n  -webkit-animation: lds-facebook_1 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  animation: lds-facebook_1 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  -webkit-animation-delay: -0.2s;\r\n  animation-delay: -0.2s;\n}\n.lds-facebook div:nth-child(2) {\r\n  left: 85px;\r\n  background: #4267b2;\r\n  -webkit-animation: lds-facebook_2 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  animation: lds-facebook_2 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  -webkit-animation-delay: -0.1s;\r\n  animation-delay: -0.1s;\n}\n.lds-facebook div:nth-child(3) {\r\n  left: 135px;\r\n  background: #4b70bb;\r\n  -webkit-animation: lds-facebook_3 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  animation: lds-facebook_3 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\n}\n.lds-facebook {\r\n  width: 145px !important;\r\n  height: 145px !important;\r\n  -webkit-transform: translate(-72.5px, -72.5px) scale(0.725) translate(72.5px, 72.5px);\r\n  transform: translate(-72.5px, -72.5px) scale(0.725) translate(72.5px, 72.5px);\n}\r\n", ""]);
+exports.push([module.i, "\n@keyframes lds-facebook_1 {\n0% {\r\n    top: 36px;\r\n    height: 128px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@-webkit-keyframes lds-facebook_1 {\n0% {\r\n    top: 36px;\r\n    height: 128px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@keyframes lds-facebook_2 {\n0% {\r\n    top: 41.99999999999999px;\r\n    height: 116.00000000000001px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@-webkit-keyframes lds-facebook_2 {\n0% {\r\n    top: 41.99999999999999px;\r\n    height: 116.00000000000001px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@keyframes lds-facebook_3 {\n0% {\r\n    top: 48px;\r\n    height: 104px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n@-webkit-keyframes lds-facebook_3 {\n0% {\r\n    top: 48px;\r\n    height: 104px;\n}\n50% {\r\n    top: 60px;\r\n    height: 80px;\n}\n100% {\r\n    top: 60px;\r\n    height: 80px;\n}\n}\n.lds-facebook {\r\n  position: relative;\n}\n.lds-facebook div {\r\n  position: absolute;\r\n  width: 30px;\n}\n.lds-facebook div:nth-child(1) {\r\n  left: 35px;\r\n  background: #47639e;\r\n  -webkit-animation: lds-facebook_1 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  animation: lds-facebook_1 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  -webkit-animation-delay: -0.2s;\r\n  animation-delay: -0.2s;\n}\n.lds-facebook div:nth-child(2) {\r\n  left: 85px;\r\n  background: #4267b2;\r\n  -webkit-animation: lds-facebook_2 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  animation: lds-facebook_2 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  -webkit-animation-delay: -0.1s;\r\n  animation-delay: -0.1s;\n}\n.lds-facebook div:nth-child(3) {\r\n  left: 135px;\r\n  background: #4b70bb;\r\n  -webkit-animation: lds-facebook_3 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\r\n  animation: lds-facebook_3 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;\n}\n.lds-facebook {\r\n  width: 145px !important;\r\n  height: 145px !important;\r\n  -webkit-transform: translate(-72.5px, -72.5px) scale(0.725) translate(72.5px, 72.5px);\r\n  transform: translate(-72.5px, -72.5px) scale(0.725) translate(72.5px, 72.5px);\n}\n.ref-list {\r\n    margin-top: .5em;\n}\r\n", ""]);
 
 // exports
 
@@ -82378,6 +82459,9 @@ exports.push([module.i, "\n@keyframes lds-facebook_1 {\n0% {\r\n    top: 36px;\r
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
 //
 //
 //
@@ -82485,7 +82569,21 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "widget" }, [
-      _vm._m(0),
+      _c("div", { staticClass: "widget-header" }, [
+        _c("h3", { staticClass: "widget-caption" }, [
+          _vm._v("People You May Know")
+        ]),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticStyle: { "margin-top": "1em", "margin-left": "1em" },
+            attrs: { title: "Refresh list" },
+            on: { click: _vm.get_people_you_may_know }
+          },
+          [_c("i", { staticClass: "fa fa-refresh" })]
+        )
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "widget-body bordered-top bordered-sky" }, [
         _c("div", { staticClass: "card" }, [
@@ -82498,7 +82596,7 @@ var render = function() {
               },
               [
                 _vm.clouts_suggestions.length <= 0
-                  ? _c("div", { staticClass: "lds-css ng-scope" }, [_vm._m(1)])
+                  ? _c("div", { staticClass: "lds-css ng-scope" }, [_vm._m(0)])
                   : _vm._e(),
                 _vm._v(" "),
                 _vm._l(_vm.clouts_suggestions, function(clout) {
@@ -82545,11 +82643,7 @@ var render = function() {
                       )
                     ])
                   ])
-                }),
-                _vm._v(" "),
-                _vm.clouts_suggestions.length <= 0
-                  ? _c("li", [_vm._m(2)])
-                  : _vm._e()
+                })
               ],
               2
             )
@@ -82564,16 +82658,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "widget-header" }, [
-      _c("h3", { staticClass: "widget-caption" }, [
-        _vm._v("People You May Know")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c(
       "div",
       {
@@ -82582,25 +82666,6 @@ var staticRenderFns = [
       },
       [_c("div"), _vm._v(" "), _c("div"), _vm._v(" "), _c("div")]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-xs-12" }, [
-        _c("div", { staticClass: "activity" }, [
-          _vm._v(
-            "\n                                        You're quite popular! We couldn't any friend suggestions for you. \n                                        "
-          ),
-          _c("p", [
-            _vm._v(
-              "\n                                            Seems like you've exhausted our friends list :-)\n                                        "
-            )
-          ])
-        ])
-      ])
-    ])
   }
 ]
 render._withStripped = true

@@ -8,27 +8,45 @@
                 <div class="card">
                     <div class="content">
                         <ul class="list-unstyled team-members" id="people-suggestion">
-                            <div class="lds-css ng-scope" v-if="feeds.length <= 0">
-                                <div style="width:200px;height:200px;" class="lds-facebook">
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                            </div>
-                            <li>
-                              {{ feeds }}
+                            <li v-if="feeds.length <= 0">
+                              All clear. Your activity feed is empty!
                             </li>
                             <li v-for="feed in feeds">
-                              <div class="row">
+                              <div class="row" v-if="feed.type == 'App\\Notifications\\ShareFriendActivity'">
                                 <div class="col-xs-3">
                                   <div class="avatar">
-                                      <img src="http://social/public/defaults/avatars/male.jpg" alt="img" class="img-circle img-no-padding img-responsive">
+                                      <img :src="feed.avatar" alt="img" class="img-circle img-no-padding img-responsive">
                                   </div>
                                 </div>
                                 <div class="col-xs-9">
-                                  <b><a href="#">Hillary Markston</a></b> shared a 
-                                  <b><a href="#">publication</a></b>. 
-                                  <span class="timeago" >5 min ago</span>
+                                  <span v-if="feed.id === id">
+                                    {{ feed.name }} {{ feed.message }} {{ feed.friend_name }}
+                                  </span>
+                                  <span v-else>
+                                    {{ feed.name }} {{ feed.message }} {{ feed.friend_name }}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div class="row" v-else-if="feed.type == 'App\\Notifications\\FriendRequestAccepted'">
+                                <div class="col-xs-3">
+                                  <div class="avatar">
+                                      <img :src="feed.avatar" alt="img" class="img-circle img-no-padding img-responsive">
+                                  </div>
+                                </div>
+                                <div class="col-xs-9">
+                                  {{ feed.name }} {{ feed.message }}
+                                </div>
+                              </div>
+
+                              <div class="row" v-else-if="feed.type == 'App\\Notifications\\NewFriendRequest'">
+                                <div class="col-xs-3">
+                                  <div class="avatar">
+                                      <img :src="feed.avatar" alt="img" class="img-circle img-no-padding img-responsive">
+                                  </div>
+                                </div>
+                                <div class="col-xs-9">
+                                  {{ feed.name }} {{ feed.message }}
                                 </div>
                               </div>
                             </li>
@@ -42,6 +60,9 @@
 
 <script>
 export default {
+    props: [
+      'id'
+    ],
     data() {
         return {
           notifications: {},

@@ -49,16 +49,18 @@ class FriendshipController extends Controller
 
         $user->notify(new \App\Notifications\FriendRequestAccepted(\Auth::user()));
 
-        $friends = $user->friends();
+        $friends = \Auth::user()->friends();
 
         foreach($friends as $friend):
-            $friend->notify(new \App\Notifications\ShareFriendActivity(\Auth::user(), $user));
+            if($friend->id != \Auth::id()):
+                $friend->notify(new \App\Notifications\ShareFriendActivity(\Auth::user(), $user));
+            endif;
         endforeach;
         
         return $resp;
     }
 
-    public function get_friend_suggestions() {
+    public function get_friend_suggestions() {  
         $list = [];
         $suggestions = [];
         $clouts = \Auth::user()->get_clouts_from_same_state_id();

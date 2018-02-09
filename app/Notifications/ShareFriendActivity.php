@@ -7,20 +7,20 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class FriendRequestAccepted extends Notification implements ShouldQueue
+class ShareFriendActivity extends Notification implements ShouldQueue
 {
     use Queueable;
     public $user;
-
+    public $friend;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user, $friend)
     {
-        //
         $this->user = $user;
+        $this->friend = $friend;
     }
 
     /**
@@ -31,7 +31,7 @@ class FriendRequestAccepted extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'database', 'broadcast'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -43,9 +43,9 @@ class FriendRequestAccepted extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line($this->user->name .  ' accepted your friend request.')
-                    ->action('View profile', route('profile', ['username' => $this->user->username]))
-                    ->line('Thank you for using GClout.');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -57,11 +57,11 @@ class FriendRequestAccepted extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'name'      =>  $this->user->name,
-            'message'   =>  ' accepted your friend request.',
-            'username'  =>  $this->user->username,
-            'id'        =>  $this->user->id,
-            'avatar'    =>  $this->user->avatar,
+            'name'          =>  $this->user->name,
+            'message'       =>  ' became friends with ',
+            'friend_name'   =>  $this->friend->name,
+            'avatar'        =>  $this->user->avatar,
+            'f_avatar'      =>  $this->friend->avatar
         ];
     }
 }

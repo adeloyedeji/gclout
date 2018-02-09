@@ -87,6 +87,11 @@
                         </li>
                         @auth
                         <li>
+                            <a href="{{ route('home') }}" title="Home">
+                                Feeds
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('profile', ['username' => \Auth::user()->username]) }}" title="Profile">
                                 Profile
                             </a>

@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     use Notifiable;
     use Friendable;
-    //use Searchable;
+    use Searchable;
     use Cloutable;
 
     /**
